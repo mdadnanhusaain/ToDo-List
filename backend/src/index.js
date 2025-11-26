@@ -9,7 +9,6 @@ dotenv.config();
 
 const app = express();
 
-// MongoDB Connection
 async function main() {
   await mongoose.connect(process.env.MONGO_URI);
 }
@@ -29,12 +28,8 @@ app.use(
   })
 );
 
-app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
-
 app.use("/api/tasks", taskRoutes);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server is listening to http://localhost:${process.env.PORT} \n`);
+  console.log(`Server is listening to ${process.env.PORT} \n`);
 });

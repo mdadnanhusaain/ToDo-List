@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createTask,
   getTodayTasks,
+  getTasksByDate,
   getWeeklySummary,
   getAllTasks,
   updateTask,
@@ -12,12 +13,11 @@ import {
 
 const router = Router();
 
-// summary & filters
 router.get("/today", getTodayTasks);
+router.get("/by-date", getTasksByDate);
 router.get("/summary/week", getWeeklySummary);
 router.get("/search", searchTasks);
 
-// basic CRUD
 router.get("/", getAllTasks);
 router.post("/", createTask);
 router.put("/:id", updateTask);

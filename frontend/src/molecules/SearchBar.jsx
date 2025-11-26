@@ -1,14 +1,20 @@
 import TextInput from "../atoms/TextInput";
+import SearchIcon from "../icons/SearchIcon";
 
 export default function SearchBar({ onFocus }) {
   return (
-    <div className="rounded-xl bg-white px-4 py-3 shadow-sm flex items-center gap-2">
+    <div className="relative">
       <TextInput
         placeholder="Search for a task"
         onFocus={onFocus}
-        className="border-none px-0 py-0 focus:ring-0"
+        className="px-5 py-4 rounded-sm! font-light text-xs"
+        id="search-bar"
       />
-      <span className="text-lg text-gray-500">🔍</span>
+      <label htmlFor="search-bar">
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          <SearchIcon className="w-5 h-5 text-gray-400" />
+        </div>
+      </label>
     </div>
   );
 }

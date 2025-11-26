@@ -12,7 +12,6 @@ const taskSchema = new mongoose.Schema(
       trim: true,
     },
     date: {
-      // Due date (we'll use this for "today" + "weekly")
       type: Date,
       required: true,
     },
@@ -38,7 +37,6 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// text index for search
 taskSchema.index({ title: "text", description: "text" });
 
 export default mongoose.model("Task", taskSchema);

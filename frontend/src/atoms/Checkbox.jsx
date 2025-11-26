@@ -1,18 +1,15 @@
+import CheckIcon from "../icons/CheckIcon";
+
 export default function Checkbox({ checked, onChange }) {
   return (
     <button
       type="button"
       onClick={onChange}
       className={
-        "flex h-5 w-5 items-center justify-center rounded border " +
-        (checked
-          ? "border-indigo-500 bg-indigo-500 text-white"
-          : "border-gray-300 bg-white")
+        "flex size-7 items-center justify-center border cursor-pointer border-[#4566EC]"
       }
     >
-      {checked && (
-        <span className="text-[11px] leading-none select-none">✓</span>
-      )}
+      {checked && <CheckIcon className="size-5 text-[#4566EC]" />}
     </button>
   );
 }

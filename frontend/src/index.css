@@ -2,19 +2,22 @@
 
 body {
   @apply bg-gray-200;
+  font-family: "Poppins", sans-serif;
 }
 
 /* mobile frame */
 .app-shell {
-  @apply mx-auto min-h-screen max-w-sm bg-gray-100;
+  @apply mx-auto min-h-screen max-w-[390px] bg-white;
 }
 
-/* Hide scrollbar for date selector */
+/* Hide scrollbar but keep scrolling functional */
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+  display: none; /* Chrome, Safari, Opera */
 }

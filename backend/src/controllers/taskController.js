@@ -42,11 +42,34 @@ export const getTodayTasks = async (_req, res) => {
   }
 };
 
+export const getTasksByDate = async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) {
+      return res.status(400).json({ message: "Date parameter is required" });
+    }
+
+    const targetDate = new Date(date);
+    const tasks = await Task.find({
+      date: {
+        $gte: startOfDay(targetDate),
+        $lte: endOfDay(targetDate),
+      },
+    }).sort({ createdAt: 1 });
+
+    res.json(tasks);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch tasks by date" });
+  }
+};
+
 export const getWeeklySummary = async (req, res) => {
   try {
-    const today = new Date();
-    const weekStart = startOfWeek(today, { weekStartsOn: 0 }); // Sun
-    const weekEnd = endOfWeek(today, { weekStartsOn: 0 });
+    const dateParam = req.query.date;
+    const referenceDate = dateParam ? new Date(dateParam) : new Date();
+    const weekStart = startOfWeek(referenceDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(referenceDate, { weekStartsOn: 1 });
 
     const tasks = await Task.aggregate([
       {
@@ -147,7 +170,6 @@ export const searchTasks = async (req, res) => {
     const { q } = req.query;
     if (!q) return res.json([]);
 
-    // Use regex for case-insensitive search if text index is not available
     const searchRegex = new RegExp(q, "i");
     const tasks = await Task.find({
       $or: [{ title: searchRegex }, { description: searchRegex }],

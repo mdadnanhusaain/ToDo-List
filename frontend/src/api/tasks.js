@@ -2,7 +2,23 @@ import { request } from "./client";
 
 export const getTodayTasks = () => request("/tasks/today");
 
-export const getWeeklySummary = () => request("/tasks/summary/week");
+export const getTasksByDate = (date) => {
+  const dateStr =
+    date instanceof Date ? date.toISOString().split("T")[0] : date;
+  return request(`/tasks/by-date?date=${encodeURIComponent(dateStr)}`);
+};
+
+export const getWeeklySummary = (date) => {
+  const dateStr = date
+    ? date instanceof Date
+      ? date.toISOString().split("T")[0]
+      : date
+    : null;
+  const url = dateStr
+    ? `/tasks/summary/week?date=${encodeURIComponent(dateStr)}`
+    : "/tasks/summary/week";
+  return request(url);
+};
 
 export const getAllTasks = () => request("/tasks");
 

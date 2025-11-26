@@ -1,15 +1,16 @@
 import Checkbox from "../atoms/Checkbox";
+import DeleteIcon from "../icons/DeleteIcon";
+import EditIcon from "../icons/EditIcon";
 
 export default function TaskListItem({ task, onToggle, onEdit, onDelete }) {
   return (
-    <div className="flex items-center justify-between py-3 px-4">
+    <div className="flex items-center justify-between py-3">
       <div className="flex items-center gap-3 flex-1">
         <Checkbox checked={task.completed} onChange={onToggle} />
         <span
-          className={
-            "text-sm " +
-            (task.completed ? "line-through text-gray-400" : "text-gray-700")
-          }
+          className={`text-sm text-[#090E23] ${
+            task.completed && "line-through"
+          }`}
         >
           {task.title}
         </span>
@@ -21,23 +22,10 @@ export default function TaskListItem({ task, onToggle, onEdit, onDelete }) {
               e.stopPropagation();
               onDelete();
             }}
-            className="text-gray-400 hover:text-red-500 transition-colors"
+            className="text-[#C0C0C0] hover:text-red-500 transition-colors cursor-pointer"
             aria-label="Delete task"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            <DeleteIcon className="size-6" />
           </button>
         )}
         {onEdit && (
@@ -46,23 +34,10 @@ export default function TaskListItem({ task, onToggle, onEdit, onDelete }) {
               e.stopPropagation();
               onEdit();
             }}
-            className="text-gray-400 hover:text-indigo-500 transition-colors"
+            className="text-[#C0C0C0] hover:text-indigo-500 transition-colors cursor-pointer"
             aria-label="Edit task"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
+            <EditIcon className="size-6" />
           </button>
         )}
       </div>
