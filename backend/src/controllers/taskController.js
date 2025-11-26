@@ -9,10 +9,19 @@ export const createTask = async (req, res) => {
       return res.status(400).json({ message: "Title and date are required." });
     }
 
+    // Parse date string as local date to avoid timezone issues
+    let taskDate;
+    if (typeof date === "string" && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = date.split("-").map(Number);
+      taskDate = new Date(year, month - 1, day);
+    } else {
+      taskDate = new Date(date);
+    }
+
     const task = await Task.create({
       title,
       description,
-      date: new Date(date),
+      date: taskDate,
       startTime,
       endTime,
       priority: priority || "medium",
@@ -49,7 +58,11 @@ export const getTasksByDate = async (req, res) => {
       return res.status(400).json({ message: "Date parameter is required" });
     }
 
-    const targetDate = new Date(date);
+    // Parse date string as local date (YYYY-MM-DD format)
+    // Split the date string to avoid timezone issues
+    const [year, month, day] = date.split("-").map(Number);
+    const targetDate = new Date(year, month - 1, day);
+
     const tasks = await Task.find({
       date: {
         $gte: startOfDay(targetDate),
@@ -67,7 +80,14 @@ export const getTasksByDate = async (req, res) => {
 export const getWeeklySummary = async (req, res) => {
   try {
     const dateParam = req.query.date;
-    const referenceDate = dateParam ? new Date(dateParam) : new Date();
+    let referenceDate;
+    if (dateParam) {
+      // Parse date string as local date (YYYY-MM-DD format)
+      const [year, month, day] = dateParam.split("-").map(Number);
+      referenceDate = new Date(year, month - 1, day);
+    } else {
+      referenceDate = new Date();
+    }
     const weekStart = startOfWeek(referenceDate, { weekStartsOn: 1 });
     const weekEnd = endOfWeek(referenceDate, { weekStartsOn: 1 });
 
@@ -117,7 +137,15 @@ export const updateTask = async (req, res) => {
     const updateData = {};
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
-    if (date !== undefined) updateData.date = new Date(date);
+    if (date !== undefined) {
+      // Parse date string as local date to avoid timezone issues
+      if (typeof date === "string" && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [year, month, day] = date.split("-").map(Number);
+        updateData.date = new Date(year, month - 1, day);
+      } else {
+        updateData.date = new Date(date);
+      }
+    }
     if (startTime !== undefined) updateData.startTime = startTime;
     if (endTime !== undefined) updateData.endTime = endTime;
     if (priority !== undefined) updateData.priority = priority;

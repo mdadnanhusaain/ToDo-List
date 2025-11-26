@@ -17,7 +17,11 @@ export default function HomePage() {
   const [showAddTask, setShowAddTask] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showAllTasks, setShowAllTasks] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
+    return today;
+  });
   const [editingTask, setEditingTask] = useState(null);
 
   const [tasks, setTasks] = useState([]);
@@ -28,7 +32,6 @@ export default function HomePage() {
   const loadTasksForDate = async (date) => {
     setLoading(true);
     try {
-      const dateStr = date.toISOString().split("T")[0];
       const tasksData = await getTasksByDate(date);
       setTasks(tasksData);
     } catch (error) {
@@ -91,6 +94,7 @@ export default function HomePage() {
   const getCurrentWeekDates = () => {
     const dates = [];
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of day
     const currentDay = today.getDay();
     const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1;
 
@@ -101,6 +105,7 @@ export default function HomePage() {
     for (let i = 0; i < 7; i++) {
       const date = new Date(monday);
       date.setDate(monday.getDate() + i);
+      date.setHours(0, 0, 0, 0); // Ensure all dates are normalized
       dates.push(date);
     }
     return dates;
@@ -156,7 +161,11 @@ export default function HomePage() {
             {currentWeekDates.map((date, dayIdx) => (
               <button
                 key={`${date.getTime()}-${dayIdx}`}
-                onClick={() => setSelectedDate(new Date(date))}
+                onClick={() => {
+                  const newDate = new Date(date);
+                  newDate.setHours(0, 0, 0, 0); // Normalize to start of day
+                  setSelectedDate(newDate);
+                }}
                 className={`flex flex-col items-center justify-between shrink-0 transition-all cursor-pointer px-2 ${
                   isSelectedDate(date)
                     ? "bg-[#4566EC] text-white w-[39px] h-[63px] py-1.5"

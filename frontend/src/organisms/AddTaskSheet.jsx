@@ -35,8 +35,10 @@ export default function AddTaskSheet({ isOpen, onClose, onCreated, task }) {
       setEndTime(task.endTime || "");
 
       if (task.date) {
-        const taskDate = new Date(task.date);
+        // Parse date correctly to avoid timezone issues
 
+        const taskDate = new Date(task.date);
+        // Use local methods to get the date components
         const year = taskDate.getFullYear();
         const month = String(taskDate.getMonth() + 1).padStart(2, "0");
         const day = String(taskDate.getDate()).padStart(2, "0");
@@ -60,7 +62,14 @@ export default function AddTaskSheet({ isOpen, onClose, onCreated, task }) {
 
   const formatDateDisplay = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
+    // Parse YYYY-MM-DD format as local date
+    let date;
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      date = new Date(year, month - 1, day);
+    } else {
+      date = new Date(dateString);
+    }
     const days = [
       "Sunday",
       "Monday",

@@ -3,17 +3,32 @@ import { request } from "./client";
 export const getTodayTasks = () => request("/tasks/today");
 
 export const getTasksByDate = (date) => {
-  const dateStr =
-    date instanceof Date ? date.toISOString().split("T")[0] : date;
+  let dateStr;
+  if (date instanceof Date) {
+    // Use local date components to avoid timezone issues
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    dateStr = `${year}-${month}-${day}`;
+  } else {
+    dateStr = date;
+  }
   return request(`/tasks/by-date?date=${encodeURIComponent(dateStr)}`);
 };
 
 export const getWeeklySummary = (date) => {
-  const dateStr = date
-    ? date instanceof Date
-      ? date.toISOString().split("T")[0]
-      : date
-    : null;
+  let dateStr = null;
+  if (date) {
+    if (date instanceof Date) {
+      // Use local date components to avoid timezone issues
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      dateStr = `${year}-${month}-${day}`;
+    } else {
+      dateStr = date;
+    }
+  }
   const url = dateStr
     ? `/tasks/summary/week?date=${encodeURIComponent(dateStr)}`
     : "/tasks/summary/week";
